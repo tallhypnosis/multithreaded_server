@@ -2,7 +2,7 @@
 #define MYQUEUE_H_
 
 struct node{
-    struct node* next;
+    Task task;
     int *client_socket;
 };
 typedef struct node node_t;
