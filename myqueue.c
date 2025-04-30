@@ -8,7 +8,7 @@ pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
 node_t* head = NULL;
 node_t* tail = NULL;
 
-typdef struct {
+typedef struct {
   int *client_socket;
   struct timeval enqueue_time;
 } Task;
@@ -43,6 +43,7 @@ int *dequeue() {
     if(head == NULL){
         return NULL;
     }
+    pthread_mutex_unlock(&my_mutex);
 
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
@@ -53,7 +54,7 @@ int *dequeue() {
     node_t *timeout_node = NULL;
 
     while(current != NULL) {
-      double wait_time = (current_time.tv_sec - current->task.enqueue_time.tv-sec) + (current_time.tv_usec - current->task.enqueue_time.tv_usec) / 1e6;
+      double wait_time = (current_time.tv_sec - current->task.enqueue_time.tv_sec) + (current_time.tv_usec - current->task.enqueue_time.tv_usec) / 1e6;
 
       if(wait_time > 5.0) {
         timeout_node = current;
@@ -77,6 +78,7 @@ int *dequeue() {
 
         int *result = timeout_node->task.client_socket;
         free(timeout_node);
+	pthread_mutex_unlock(&my_mutex);
         return result;
         }
 
