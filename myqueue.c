@@ -39,8 +39,8 @@ void enqueue(int *client_socket){
 // returns NULL if the queue is empty
 // returns the pointer to a client_socket, if there is one 
 int *dequeue() {
-    pthread_mutex_lock(&my_mutex);
     if(head == NULL){
+	pthread_mutex_unlock(&my_mutex);
         return NULL;
     }
     pthread_mutex_unlock(&my_mutex);
