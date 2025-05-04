@@ -96,7 +96,7 @@ void * thread_function(void *arg){
 
 	int *pclient = dequeue();
 
-	pthread_mutex_unclock(&my_mutex);
+	pthread_mutex_unlock(&my_mutex);
 
 	if(pclient != NULL) {
 		handle_connection(pclient);

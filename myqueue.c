@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 pthread_mutex_t my_mutex;
-pthread_cont_t myCond;
+pthread_cond_t myCond;
 
 node_t* head = NULL;
 node_t* tail = NULL;
@@ -42,10 +42,8 @@ void enqueue(int *client_socket){
 // returns the pointer to a client_socket, if there is one 
 int *dequeue() {
 
-    pthread_mutex_lock(&my_mutex);
 
-    if(head == NULL){
-	pthread_mutex_unlock(&my_mutex);
+    if(head == NULL) {
         return NULL;
     }
 
@@ -82,7 +80,6 @@ int *dequeue() {
 
         int *result = timeout_node->task.client_socket;
         free(timeout_node);
-	pthread_mutex_unlock(&my_mutex);
         return result;
         }
 
@@ -94,6 +91,5 @@ int *dequeue() {
             tail = NULL;
         }
         free(temp);
-        pthread_mutex_unlock(&my_mutex);
         return result;
 }
