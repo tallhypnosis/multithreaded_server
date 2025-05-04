@@ -88,11 +88,18 @@ int check(int exp, const char *msg) {
 
 void * thread_function(void *arg){
     while (true){
-        int *pclient = dequeue();
-        if(pclient != NULL){
-        	handle_connection(pclient);
-        } else {
-	  	pthread_cond_wait(&myCond, &my_mutex);
+        pthread_mutex_lock(&my_mutex);
+
+	while(head == NULL) {
+		pthread_cond_wait(&myCond, &my_mutex);
+	}
+
+	int *pclient = dequeue();
+
+	pthread_mutex_unclock(&my_mutex);
+
+	if(pclient != NULL) {
+		handle_connection(pclient);
 	}
     }
 }

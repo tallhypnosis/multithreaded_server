@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t my_mutex;
+pthread_cont_t myCond;
 
 node_t* head = NULL;
 node_t* tail = NULL;
@@ -33,6 +34,7 @@ void enqueue(int *client_socket){
         tail->next = newnode;
     }
     tail = newnode;
+    pthread_cond_signal(&myCond);
     pthread_mutex_unlock(&my_mutex);
 }
 
