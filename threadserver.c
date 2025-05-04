@@ -27,7 +27,6 @@
 
 pthread_t thread_pool[THREAD_POOL_SIZE];
 pthread_cond_t myCond;
-pthread_mutex_t myMutex;
 
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
@@ -93,13 +92,12 @@ void * thread_function(void *arg){
         if(pclient != NULL){
         	handle_connection(pclient);
         } else {
-	  	pthread_cond_wait(&myCond, &myMutex);
+	  	pthread_cond_wait(&myCond, &my_mutex);
 	}
     }
 }
 
 void* handle_connection(void* p_client_socket) {
-    pthread_mutex_lock(&myMutex);
     int client_socket = *((int*)p_client_socket);
     free(p_client_socket); //free the pointer since we won't be needing it anymore
     char buffer[BUFSIZE];
@@ -148,6 +146,5 @@ void* handle_connection(void* p_client_socket) {
     printf("closing connection\n");
 
     return NULL;
-    pthread_mutex_unlock(&myMutex);
 }
 
